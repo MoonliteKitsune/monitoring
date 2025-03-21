@@ -47,7 +47,3 @@ print(f"📌 Titre : {c}")
 print(f"📌 ref  : {b}")
 print(f"📌 status  : {d}")
 
-else:
-        print("❌ Aucune alerte trouvée avec la classe 'cert-alert'.")
-else:
-    print(f"❌ Erreur lors du chargement de la page : {response.status_code}")

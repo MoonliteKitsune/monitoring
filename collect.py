@@ -20,9 +20,9 @@ def run_sonde(command):
         return None
 
 # Exécution des sondes et récupération des valeurs
-cpu = run_sonde("./sondes/sondecpu.sh")  # Exemple d'une sonde CPU
-ram = run_sonde("./sondes/sonderam.sh")  # Exemple d'une sonde RAM
-disk = run_sonde("./sondes/sondedisk.sh")  # Exemple d'une sonde Disque
+cpu = run_sonde("./sondes/sondecpu.py")  # Exemple d'une sonde CPU
+ram = run_sonde("./sondes/sonderam.py")  # Exemple d'une sonde RAM
+disk = run_sonde("./sondes/sondedisk.py")  # Exemple d'une sonde Disque
 users = run_sonde("./sondes/sondeuser.sh")  # Exemple d'une sonde Utilisateurs
 process = run_sonde("./sondes/sondeprocess.sh")  # Exemple d'une sonde Utilisateurs
 

@@ -20,10 +20,11 @@ def run_sonde(command):
         return None
 
 # Exécution des sondes et récupération des valeurs
-cpu = run_sonde("./sondes/cpu_usage.sh")  # Exemple d'une sonde CPU
-ram = run_sonde("./sondes/ram_usage.sh")  # Exemple d'une sonde RAM
-disk = run_sonde("./sondes/disk_usage.sh")  # Exemple d'une sonde Disque
-users = run_sonde("./sondes/users_connected.sh")  # Exemple d'une sonde Utilisateurs
+cpu = run_sonde("./sondes/sondecpu.sh")  # Exemple d'une sonde CPU
+ram = run_sonde("./sondes/sonderam.sh")  # Exemple d'une sonde RAM
+disk = run_sonde("./sondes/sondedisk.sh")  # Exemple d'une sonde Disque
+users = run_sonde("./sondes/sondeuser.sh")  # Exemple d'une sonde Utilisateurs
+process = run_sonde("./sondes/sondeprocess.sh")  # Exemple d'une sonde Utilisateurs
 
 # Connexion à la base de données
 conn = sqlite3.connect("monitoring.db")

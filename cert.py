@@ -1,4 +1,5 @@
 import requests
+import sqlite3
 from bs4 import BeautifulSoup
 
 # URL de la page web à analyser

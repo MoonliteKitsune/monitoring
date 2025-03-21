@@ -43,8 +43,8 @@ cursor.execute("INSERT INTO alerte (date, ref, titre, status) VALUES (?, ?, ?, ?
 conn.commit()
 conn.close()
 
-print("✅ Première alerte enregistrée avec succès !")
-print(f"📌 Titre : {c}")
-print(f"📌 ref  : {b}")
-print(f"📌 status  : {d}")
+print(" Première alerte enregistrée avec succès !")
+print(f" Titre : {c}")
+print(f" ref  : {b}")
+print(f" status  : {d}")
 

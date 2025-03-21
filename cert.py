@@ -21,34 +21,33 @@ b=ref.text.strip()
 c=titre.text.strip()
 d=status.text.strip()
 
-        # Connexion à la base de données SQLite
-        conn = sqlite3.connect("monitoring.db")
-        cursor = conn.cursor()
+conn = sqlite3.connect("monitoring.db")
+cursor = conn.cursor()
 
         # Création de la table si elle n'existe pas
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS alerte (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TEXT,
-            ref TEXT,
-            titre TEXT,
-            status TEXT
-        )
-        """)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS alerte (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT,
+        ref TEXT,
+        titre TEXT,
+        status TEXT
+)
+""")
 
         # Insérer l'alerte dans la base de données
-        cursor.execute("INSERT INTO alerte (date, ref, titre, status) VALUES (?, ?, ?, ?)", 
-                       (a, b, c, d))
+cursor.execute("INSERT INTO alerte (date, ref, titre, status) VALUES (?, ?, ?, ?)", 
+                (a, b, c, d))
 
-        conn.commit()
-        conn.close()
+conn.commit()
+conn.close()
 
-        print("✅ Première alerte enregistrée avec succès !")
-        print(f"📌 Titre : {c}")
-        print(f"📌 ref  : {b}")
-        print(f"📌 status  : {d}")
+print("✅ Première alerte enregistrée avec succès !")
+print(f"📌 Titre : {c}")
+print(f"📌 ref  : {b}")
+print(f"📌 status  : {d}")
 
-    else:
+else:
         print("❌ Aucune alerte trouvée avec la classe 'cert-alert'.")
 else:
     print(f"❌ Erreur lors du chargement de la page : {response.status_code}")

@@ -1,48 +1,31 @@
 import requests
 from bs4 import BeautifulSoup
-import sqlite3
 
-# URL des alertes CERT
-CERT_URL = "https://www.cert.ssi.gouv.fr/"
+# URL de la page des alertes CERT-FR
+url = "https://www.cert.ssi.gouv.fr/"
 
-try:
-    # Récupération de la page web
-    response = requests.get(CERT_URL, timeout=10)
-    response.raise_for_status()  # Vérifie si l'URL est accessible
-except requests.exceptions.RequestException as e:
-    print(f"❌ Erreur lors de la récupération de la page CERT : {e}")
-    exit(1)
+# Télécharger le contenu de la page
+response = requests.get(url)
 
-# Analyse du HTML avec BeautifulSoup
-soup = BeautifulSoup(response.text, "html.parser")
+# Vérifier si la requête a réussi
+if response.status_code == 200:
+    # Parser le contenu HTML avec BeautifulSoup
+    soup = BeautifulSoup(response.text, "html.parser")
 
-# Extraction du dernier titre d'alerte
-latest_alert = soup.find("a", class_="news-title")
+    # Trouver la première alerte (elle est généralement dans une balise <article>)
+    first_alert = soup.find("article")
 
-if latest_alert:
-    latest_alert_text = latest_alert.text.strip()
+    if first_alert:
+        # Extraire le titre de l'alerte
+        alert_title = first_alert.find("h2").text.strip()
+
+        # Extraire le lien de l'alerte
+        alert_link = first_alert.find("a")["href"]
+        alert_url = f"https://www.cert.ssi.gouv.fr{alert_link}"
+
+        print(f"🚨 Première alerte : {alert_title}")
+        print(f"🔗 Lien : {alert_url}")
+    else:
+        print("❌ Aucune alerte trouvée.")
 else:
-    print("❌ Erreur : Impossible de trouver une alerte CERT sur la page.")
-    exit(1)
-
-# Connexion à la base de données
-conn = sqlite3.connect("monitoring.db")
-cursor = conn.cursor()
-
-# Création de la table si elle n'existe pas
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS alerts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    alert TEXT
-)
-""")
-
-# Insertion de l'alerte dans la base
-cursor.execute("INSERT INTO alerts (alert) VALUES (?)", (latest_alert_text,))
-
-# Sauvegarde et fermeture
-conn.commit()
-conn.close()
-
-print(f"✅ Nouvelle alerte CERT enregistrée : {latest_alert_text}")
+    print(f"❌ Erreur lors du chargement de la page : {response.status_code}")

@@ -11,4 +11,4 @@ cursor.execute("DELETE FROM monitoring WHERE timestamp < datetime('now', '-7 day
 conn.commit()
 conn.close()
 
-print("🗑️ Anciennes données supprimées.")
+print("Anciennes données supprimées.")

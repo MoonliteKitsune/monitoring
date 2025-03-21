@@ -2,53 +2,56 @@ import sqlite3
 import subprocess
 import re
 
-# Fonction pour exécuter une sonde et extraire la valeur numérique
+# Fonction pour exécuter une sonde et extraire son nom + sa valeur numérique
 def run_sonde(command):
     try:
         # Exécuter la commande et récupérer la sortie
         result = subprocess.check_output(command, shell=True, text=True).strip()
         
-        # Extraction de la valeur numérique avec une regex
-        match = re.search(r"(\d+\.?\d*)", result)
+        # Extraction du nom de la sonde et de la valeur numérique
+        match = re.search(r"(.+?)\s*:\s*(\d+\.?\d*)", result)
         if match:
-            return float(match.group(1))  # Convertir en float
+            sonde = match.group(1).strip()  # Nom de la sonde (texte avant ":")
+            valeur = float(match.group(2))  # Valeur numérique
+            return sonde, valeur
         else:
             print(f"⚠️ Erreur : Impossible d'extraire une valeur de la sortie '{result}'")
-            return None
+            return None, None
     except subprocess.CalledProcessError as e:
         print(f"❌ Erreur avec la commande {command}: {e}")
-        return None
+        return None, None
 
 # Exécution des sondes et récupération des valeurs
-cpu = run_sonde("./sondes/sondecpu.py")  # Exemple d'une sonde CPU
-ram = run_sonde("./sondes/sonderam.py")  # Exemple d'une sonde RAM
-disk = run_sonde("./sondes/sondedisk.py")  # Exemple d'une sonde Disque
-users = run_sonde("./sondes/sondeuser.sh")  # Exemple d'une sonde Utilisateurs
-process = run_sonde("./sondes/sondeprocess.sh")  # Exemple d'une sonde Utilisateurs
+sondes = [
+    "./sondes/sondecpu.py",
+    "./sondes/sonderam.py",
+    "./sondes/sondedisk.py",
+    "./sondes/sondeuser.sh",
+    "./sondes/sondeprocess.sh"
+]
 
 # Connexion à la base de données
 conn = sqlite3.connect("monitoring.db")
 cursor = conn.cursor()
 
-# Création de la table si elle n'existe pas
+# Création de la table sous la forme (date | sonde | valeur)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS monitoring (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    cpu_usage REAL,
-    ram_usage REAL,
-    disk_usage REAL,
-    users_connected INTEGER
+    sonde TEXT,
+    valeur REAL
 )
 """)
 
-# Vérification et insertion des données
-if cpu is not None and ram is not None and disk is not None and users is not None:
-    cursor.execute("INSERT INTO monitoring (cpu_usage, ram_usage, disk_usage, users_connected) VALUES (?, ?, ?, ?)",
-                   (cpu, ram, disk, int(users)))
-    conn.commit()
-    print("✅ Données des sondes enregistrées avec succès !")
-else:
-    print("⚠️ Erreur : certaines sondes n'ont pas retourné de données valides.")
+# Récupération et insertion des données
+for cmd in sondes:
+    sonde, valeur = run_sonde(cmd)
+    if sonde and valeur is not None:
+        cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
+        conn.commit()
+        print(f"✅ Données de '{sonde}' enregistrées avec succès : {valeur}")
+    else:
+        print(f"⚠️ Erreur : la sonde '{cmd}' n'a pas retourné de données valides.")
 
 conn.close()

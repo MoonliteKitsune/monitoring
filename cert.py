@@ -14,13 +14,10 @@ if response.status_code == 200:
     # Parser le contenu HTML avec BeautifulSoup
     soup = BeautifulSoup(response.text, "html.parser")
 
-    # Trouver le premier élément avec la classe "cert-alert"
-    first_alert = soup.find(class_="cert-alert")
+    # Trouver toutes les alertes avec la classe "cert-alert"
+    alerts = soup.find_all(class_="cert-alert")
 
-    if first_alert:
-        alert_text = first_alert.text.strip()
-        alert_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Date actuelle
-
+    if alerts:
         # Connexion à la base de données SQLite
         conn = sqlite3.connect("monitoring.db")
         cursor = conn.cursor()
@@ -30,16 +27,33 @@ if response.status_code == 200:
         CREATE TABLE IF NOT EXISTS alerte (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date TEXT,
-            alerte TEXT
+            etat TEXT,
+            titre TEXT,
+            lien TEXT
         )
         """)
 
-        # Insérer l'alerte dans la base de données
-        cursor.execute("INSERT INTO alerte (date, alerte) VALUES (?, ?)", (alert_date, alert_text))
+        for alert in alerts:
+            alert_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Date actuelle
+            
+            # Récupérer le titre de l'alerte (le texte principal)
+            alert_title = alert.text.strip()
+
+            # Récupérer l'état de l'alerte (ex: "Critique", "Alerte", etc.)
+            alert_state = alert.find("span") or alert.find("strong")  # Essayons de trouver l'état
+            alert_state = alert_state.text.strip() if alert_state else "Inconnu"
+
+            # Récupérer le lien de l’alerte
+            alert_link = alert.find("a")["href"] if alert.find("a") else "Aucun lien"
+
+            # Insérer l'alerte dans la base de données
+            cursor.execute("INSERT INTO alerte (date, etat, titre, lien) VALUES (?, ?, ?, ?)", 
+                           (alert_date, alert_state, alert_title, alert_link))
+
         conn.commit()
         conn.close()
 
-        print(f"✅ Alerte enregistrée : {alert_text}")
+        print("✅ Toutes les alertes ont été enregistrées avec succès !")
     else:
         print("❌ Aucune alerte trouvée avec la classe 'cert-alert'.")
 else:

@@ -4,6 +4,9 @@ import re
 import os
 from datetime import datetime
 
+with open("/ams/monitoring/debug_cron.txt", "a") as f:
+    f.write(f"Script exécuté à : {datetime.datetime.now()}\n")
+
 # Chemin du dossier contenant les sondes
 SONDES_DIR = "./sondes/"
 

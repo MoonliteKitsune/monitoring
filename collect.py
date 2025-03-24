@@ -3,11 +3,9 @@ import subprocess
 import re
 import os
 import datetime
-with open("cronlog.log", "a") as f:
-    f.write(f"Script exécuté à : {datetime.datetime.now()}\n")
 
 # Chemin du dossier contenant les sondes
-SONDES_DIR = "./sondes/"
+SONDES_DIR = "/sondes"
 
 # Fonction pour exécuter une sonde et extraire son nom + sa valeur numérique
 def run_sonde(command):

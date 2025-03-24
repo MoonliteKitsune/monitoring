@@ -2,7 +2,7 @@ import sqlite3
 import subprocess
 import re
 import os
-from datetime import datetime
+import datetime
 
 with open("cronlog.txt", "a") as f:
     f.write(f"Script exécuté à : {datetime.datetime.now()}\n")

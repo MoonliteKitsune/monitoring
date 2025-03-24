@@ -16,7 +16,6 @@ else:
         os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
         if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)
     ]
-    print(sondes)
 
 # Fonction pour exécuter une sonde et extraire son nom + sa valeur numérique
 def run_sonde(command):

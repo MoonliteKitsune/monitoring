@@ -3,7 +3,7 @@ import subprocess
 import re
 import os
 import datetime
-with open("cronlog.txt", "a") as f:
+with open("cronlog.log", "a") as f:
     f.write(f"Script exécuté à : {datetime.datetime.now()}\n")
 
 # Chemin du dossier contenant les sondes

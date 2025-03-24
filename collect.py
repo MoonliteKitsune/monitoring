@@ -30,10 +30,10 @@ def run_sonde(command):
             valeur = float(match.group(2))  # Valeur numérique
             return sonde, valeur
         else:
-            print(f"❌ Erreur : Impossible d'extraire une valeur de la sortie '{result}'")
+            print(f" Erreur : Impossible d'extraire une valeur de la sortie '{result}'")
             return None, None
     except subprocess.CalledProcessError as e:
-        print(f"❌ Erreur avec la commande {command}: {e}")
+        print(f" Erreur avec la commande {command}: {e}")
         return None, None
 
 # Détection automatique des sondes dans le dossier `sondes/`
@@ -63,10 +63,10 @@ for cmd in sondes:
         try:
             cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
             conn.commit()
-            print(f"✅ Données de '{sonde}' enregistrées avec succès : {valeur}")
+            print(f" Données de '{sonde}' enregistrées avec succès : {valeur}")
         except Exception as e:
-            print(f"❌ Erreur lors de l'insertion dans la base de données : {e}")
+            print(f" Erreur lors de l'insertion dans la base de données : {e}")
     else:
-        print(f"⚠️ Erreur : la sonde '{cmd}' n'a pas retourné de données valides.")
+        print(f" Erreur : la sonde '{cmd}' n'a pas retourné de données valides.")
 
 conn.close()

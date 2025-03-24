@@ -44,7 +44,7 @@ sondes = [
 ]
 
 # Connexion à la base de données
-conn = sqlite3.connect("monitoring.db")
+conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
 cursor = conn.cursor()
 
 # Création de la table sous la forme (date | sonde | valeur)
@@ -61,9 +61,12 @@ CREATE TABLE IF NOT EXISTS monitoring (
 for cmd in sondes:
     sonde, valeur = run_sonde(cmd)
     if sonde and valeur is not None:
-        cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
-        conn.commit()
-        print(f"✅ Données de '{sonde}' enregistrées avec succès : {valeur}")
+        try:
+            cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
+            conn.commit()
+            print(f"✅ Données de '{sonde}' enregistrées avec succès : {valeur}")
+        except Exception as e:
+            print(f"❌ Erreur lors de l'insertion dans la base de données : {e}")
     else:
         print(f"⚠️ Erreur : la sonde '{cmd}' n'a pas retourné de données valides.")
 

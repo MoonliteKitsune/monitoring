@@ -4,8 +4,19 @@ import re
 import os
 import datetime
 
-# Chemin du dossier contenant les sondes
-SONDES_DIR = "/sondes"
+# Chemin absolu du répertoire contenant le script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SONDES_DIR = os.path.join(SCRIPT_DIR, "sondes")
+
+# Vérifie si le répertoire existe
+if not os.path.exists(SONDES_DIR):
+    print(f"Le répertoire {SONDES_DIR} n'existe pas.")
+else:
+    sondes = [
+        os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
+        if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)
+    ]
+    print(sondes)
 
 # Fonction pour exécuter une sonde et extraire son nom + sa valeur numérique
 def run_sonde(command):

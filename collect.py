@@ -41,14 +41,13 @@ def run_sonde(command):
         return None, None
 
 def envoyer_alerte(sujet, message):
-    sender_email = "alertSysD@mail.com"
-    receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
-    smtp_server = "partage.univ-avignon.fr"  # Remplace avec le serveur SMTP de ton université
-    smtp_port = 465  # Vérifie avec l'université
-    username = "nathan.bartier@alumni.univ-avignon.fr"
-    password = os.getenv("SMTP_PASSWORD")
+    sender_email = "nathan.bartier@alumni.univ-avignon.fr"  # Doit être identique à username
+    receiver_email = "nathan.bartier@alumni.univ-avignon.fr"  # Teste avec une adresse universitaire
+    smtp_server = "partage.univ-avignon.fr"
+    smtp_port = 465
+    username = "nathan.bartier@alumni.univ-avignon.fr"  # Même adresse pour s'authentifier
+    password = os.getenv("SMTP_PASSWORD") #  Ne pas stocker en clair !
 
-    # Création du message email
     msg = MIMEMultipart()
     msg["From"] = sender_email
     msg["To"] = receiver_email
@@ -56,16 +55,15 @@ def envoyer_alerte(sujet, message):
     msg.attach(MIMEText(message, "plain"))
 
     try:
-        # Connexion au serveur SMTP avec STARTTLS
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()  # Sécurise la connexion
-        server.login(username, password)  # Authentification
+        server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        server.login(username, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
         server.quit()
         print("Alerte envoyée avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
 
+envoyer_alerte("Test Alerte", "Ceci est un test d'envoi de mail depuis mon script Python.")
 
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)

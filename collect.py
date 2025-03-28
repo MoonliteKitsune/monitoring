@@ -40,10 +40,6 @@ def run_sonde(command):
         print(f"Erreur avec la commande {command}: {e}")
         return None, None
 
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
 def envoyer_alerte(sujet, message):
     sender_email = "alertSysD@mail.com"
     receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
@@ -69,6 +65,8 @@ def envoyer_alerte(sujet, message):
         print("Alerte envoyée avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
+
+
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
     if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)

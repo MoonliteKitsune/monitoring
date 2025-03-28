@@ -4,6 +4,7 @@ import re
 import os
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Chemin absolu du répertoire contenant le script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

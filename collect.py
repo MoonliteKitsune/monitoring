@@ -41,7 +41,7 @@ def run_sonde(command):
 
 def envoyer_alerte(sujet, message):
     sender = "alerte@monitoring.com"
-    receiver = "admin@example.com"
+    receiver = "nathan.bartier@alumni.univ-avignon.fr"
     msg = MIMEText(message)
     msg["Subject"] = sujet
     msg["From"] = sender

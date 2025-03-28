@@ -39,21 +39,35 @@ def run_sonde(command):
         print(f"Erreur avec la commande {command}: {e}")
         return None, None
 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 def envoyer_alerte(sujet, message):
-    sender = "alerte@monitoring.com"
-    receiver = "nathan.bartier@alumni.univ-avignon.fr"
-    msg = MIMEText(message)
+    sender_email = "alertSysD@mail.com"
+    receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
+    smtp_server = "smtp.univ-avignon.fr"  # Remplace avec le serveur SMTP de ton université
+    smtp_port = 465  # Vérifie avec l'université
+    username = "nathan.bartier@alumni.univ-avignon.fr"
+    password = os.getenv("SMTP_PASSWORD")
+
+    # Création du message email
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
     msg["Subject"] = sujet
-    msg["From"] = sender
-    msg["To"] = receiver
-    
+    msg.attach(MIMEText(message, "plain"))
+
     try:
-        with smtplib.SMTP("localhost") as server:
-            server.sendmail(sender, [receiver], msg.as_string())
+        # Connexion au serveur SMTP avec STARTTLS
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()  # Sécurise la connexion
+        server.login(username, password)  # Authentification
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+        server.quit()
         print("Alerte envoyée avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
-
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
     if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)

@@ -2,13 +2,14 @@ import sqlite3
 import subprocess
 import re
 import os
-import datetime
+import smtplib
+from email.mime.text import MIMEText
 
 # Chemin absolu du répertoire contenant le script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SONDES_DIR = os.path.join(SCRIPT_DIR, "sondes")
 
-# Vérifie si le répertoire existe
+
 if not os.path.exists(SONDES_DIR):
     print(f"Le répertoire {SONDES_DIR} n'existe pas.")
 else:
@@ -17,18 +18,16 @@ else:
         if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)
     ]
 
-# Fonction pour exécuter une sonde et extraire son nom + sa valeur numérique
 def run_sonde(command):
     try:
-        # Exécuter la commande et récupérer la sortie
         result = subprocess.check_output(command, shell=True, text=True).strip()
         
-        # Vérifier si la sortie contient ':' pour séparer la sonde et la valeur
         if ':' in result:
-            parts = result.split(':', 1)  # Séparer en deux parties maximum
-            sonde = parts[0].strip()  # Nom de la sonde
+            parts = result.split(':', 1)  
+            sonde = parts[0].strip()  
+            sonde = os.path.splitext(sonde)[0] 
             try:
-                valeur = float(parts[1].strip())  # Valeur numérique
+                valeur = float(parts[1].strip())  
                 return sonde, valeur
             except ValueError:
                 print(f"Erreur : Impossible de convertir '{parts[1].strip()}' en nombre.")
@@ -40,18 +39,29 @@ def run_sonde(command):
         print(f"Erreur avec la commande {command}: {e}")
         return None, None
 
+def envoyer_alerte(sujet, message):
+    sender = "alerte@monitoring.com"
+    receiver = "admin@example.com"
+    msg = MIMEText(message)
+    msg["Subject"] = sujet
+    msg["From"] = sender
+    msg["To"] = receiver
+    
+    try:
+        with smtplib.SMTP("localhost") as server:
+            server.sendmail(sender, [receiver], msg.as_string())
+        print("Alerte envoyée avec succès.")
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'alerte : {e}")
 
-# Détection automatique des sondes dans le dossier `sondes/`
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
     if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)
 ]
 
-# Connexion à la base de données
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
 cursor = conn.cursor()
 
-# Création de la table sous la forme (date | sonde | valeur)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS monitoring (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,7 +71,6 @@ CREATE TABLE IF NOT EXISTS monitoring (
 )
 """)
 
-# Récupération et insertion des données
 for cmd in sondes:
     sonde, valeur = run_sonde(cmd)
     if sonde and valeur is not None:
@@ -69,6 +78,12 @@ for cmd in sondes:
             cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
             conn.commit()
             print(f" Données de '{sonde}' enregistrées avec succès : {valeur}")
+            
+            if sonde.lower() == "sondedisk" and valeur >= 100:
+                envoyer_alerte("Alerte Disque Plein", f"Le disque dur est plein à {valeur}%. Veuillez libérer de l'espace.")
+            elif sonde.lower() == "sonderam" and valeur >= 100:
+                envoyer_alerte("Alerte RAM Saturée", f"La RAM est utilisée à {valeur}%. Veuillez vérifier les processus en cours.")
+            
         except Exception as e:
             print(f" Erreur lors de l'insertion dans la base de données : {e}")
     else:

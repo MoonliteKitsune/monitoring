@@ -47,7 +47,7 @@ from email.mime.multipart import MIMEMultipart
 def envoyer_alerte(sujet, message):
     sender_email = "alertSysD@mail.com"
     receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
-    smtp_server = "smtp.univ-avignon.fr"  # Remplace avec le serveur SMTP de ton université
+    smtp_server = "partage.univ-avignon.fr"  # Remplace avec le serveur SMTP de ton université
     smtp_port = 465  # Vérifie avec l'université
     username = "nathan.bartier@alumni.univ-avignon.fr"
     password = os.getenv("SMTP_PASSWORD")

@@ -22,19 +22,24 @@ def run_sonde(command):
     try:
         # Exécuter la commande et récupérer la sortie
         result = subprocess.check_output(command, shell=True, text=True).strip()
-
-        # Extraction du nom de la sonde et de la valeur numérique
-        match = re.search(r"(.+?)\s*:\s*(\d+\.?\d*)", result)
-        if match:
-            sonde = match.group(1).strip()  # Nom de la sonde (texte avant ":")
-            valeur = float(match.group(2))  # Valeur numérique
-            return sonde, valeur
+        
+        # Vérifier si la sortie contient ':' pour séparer la sonde et la valeur
+        if ':' in result:
+            parts = result.split(':', 1)  # Séparer en deux parties maximum
+            sonde = parts[0].strip()  # Nom de la sonde
+            try:
+                valeur = float(parts[1].strip())  # Valeur numérique
+                return sonde, valeur
+            except ValueError:
+                print(f"Erreur : Impossible de convertir '{parts[1].strip()}' en nombre.")
+                return None, None
         else:
-            print(f" Erreur : Impossible d'extraire une valeur de la sortie '{result}'")
+            print(f"Erreur : Format inattendu dans la sortie '{result}'")
             return None, None
     except subprocess.CalledProcessError as e:
-        print(f" Erreur avec la commande {command}: {e}")
+        print(f"Erreur avec la commande {command}: {e}")
         return None, None
+
 
 # Détection automatique des sondes dans le dossier `sondes/`
 sondes = [

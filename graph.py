@@ -1,5 +1,7 @@
 import sqlite3
 import pygal
+import os
+import webbrowser
 
 # Connexion à la base de données
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
@@ -28,9 +30,12 @@ for sonde_tuple in sondes:
     # Ajouter les données au graphique
     line_chart.add(sonde, valeurs)
     
-    # Enregistrer ou afficher le graphique dans le navigateur
-    line_chart.render_in_browser()  # Ouvre dans le navigateur
-    # line_chart.render_to_file(f"{sonde}_graph.svg")  # Si tu veux enregistrer dans un fichier SVG
+    # Enregistrer le graphique dans un fichier SVG
+    output_file = f"{sonde}_graph.svg"
+    line_chart.render_to_file(output_file)
+    
+    # Ouvrir le fichier SVG dans le navigateur
+    webbrowser.open('file://' + os.path.realpath(output_file))
 
 # Fermer la connexion à la base de données
 conn.close()

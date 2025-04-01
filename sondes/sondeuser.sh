@@ -1,3 +1,3 @@
 #!/bin/bash
 nbuser=$(who|wc -l)
-echo "Nombre d'users connecté : $nbuser"
+echo "Nombre_d_users_connecté: $nbuser"

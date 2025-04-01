@@ -1,7 +1,6 @@
 import sqlite3
 import pygal
 import os
-import subprocess
 
 # Connexion à la base de données
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
@@ -11,7 +10,7 @@ cursor = conn.cursor()
 cursor.execute("SELECT DISTINCT sonde FROM monitoring")
 sondes = cursor.fetchall()
 
-# Créer un graphique pour chaque sonde
+# Créer un graphique pour chaque sonde et l'enregistrer dans un fichier SVG
 for sonde_tuple in sondes:
     sonde = sonde_tuple[0]  # Extraire le nom de la sonde de la tuple
     
@@ -33,9 +32,7 @@ for sonde_tuple in sondes:
     # Enregistrer le graphique dans un fichier SVG
     output_file = f"{sonde}_graph.svg"
     line_chart.render_to_file(output_file)
-    
-    # Afficher le fichier SVG dans le terminal avec w3m
-    subprocess.run(["w3m", output_file])
+    print(f"Graphique pour {sonde} enregistré sous {output_file}")
 
 # Fermer la connexion à la base de données
 conn.close()

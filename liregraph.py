@@ -3,9 +3,11 @@ import subprocess
 
 # Liste des fichiers SVG générés précédemment
 graph_files = [
-    "sonde1_graph.svg",
-    "sonde2_graph.svg",  # Ajoute ici tous les fichiers SVG générés par le script précédent
-    "sonde3_graph.svg"
+    "Utilisation_du_disque_graph.svg",
+    "Nombre_d_users_connecté_graph.svg",  # Ajoute ici tous les fichiers SVG générés par le script précédent
+    "Nombre_de_processus_en_cours_graph.svg",
+    "Pourcentage_de_ram_graph.svg",
+    "Utilisation_du_cpu_graph.svg"
 ]
 
 # Vérifier si des fichiers SVG existent

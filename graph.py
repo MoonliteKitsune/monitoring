@@ -1,7 +1,7 @@
 import sqlite3
 import pygal
 import os
-import webbrowser
+import subprocess
 
 # Connexion à la base de données
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
@@ -34,8 +34,8 @@ for sonde_tuple in sondes:
     output_file = f"{sonde}_graph.svg"
     line_chart.render_to_file(output_file)
     
-    # Ouvrir le fichier SVG dans le navigateur
-    webbrowser.open('file://' + os.path.realpath(output_file))
+    # Afficher le fichier SVG dans le terminal avec w3m
+    subprocess.run(["w3m", output_file])
 
 # Fermer la connexion à la base de données
 conn.close()

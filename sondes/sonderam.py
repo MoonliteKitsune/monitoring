@@ -3,4 +3,4 @@
 import psutil
 
 ram=psutil.virtual_memory().percent
-print(f"Pourcentage de ram : {ram}")
+print(f"Pourcentage_de_ram: {ram}")

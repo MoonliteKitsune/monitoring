@@ -63,8 +63,6 @@ def envoyer_alerte(sujet, message):
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
 
-envoyer_alerte("Test Alerte", "Ceci est un test d'envoi de mail depuis mon script Python.")
-
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)
     if os.path.isfile(os.path.join(SONDES_DIR, f)) and os.access(os.path.join(SONDES_DIR, f), os.X_OK)

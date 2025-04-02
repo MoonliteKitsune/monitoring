@@ -41,6 +41,7 @@ def run_sonde(command):
         return None, None
 
 def envoyer_alerte(sujet, message):
+    print(f"Envoi d'alerte : Sujet = {sujet}, Message = {message}")
     sender_email = "nathan.bartier@alumni.univ-avignon.fr"  # Doit être identique à username
     receiver_email = "nathan.bartier@alumni.univ-avignon.fr"  # Teste avec une adresse universitaire
     smtp_server = "partage.univ-avignon.fr"
@@ -55,6 +56,7 @@ def envoyer_alerte(sujet, message):
     msg.attach(MIMEText(message, "plain"))
 
     try:
+        print("Tentative de connexion au serveur SMTP...")
         server = smtplib.SMTP_SSL(smtp_server, smtp_port)
         server.login(username, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())

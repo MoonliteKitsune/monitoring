@@ -98,5 +98,4 @@ for cmd in sondes:
     else:
         print(f" Erreur : la sonde '{cmd}' n'a pas retourné de données valides.")
         
-envoyer_alerte("Test Alerte", "Ceci est un test d'envoi de mail depuis mon script Python.")
 conn.close()

@@ -29,6 +29,7 @@ def run_sonde(command):
             sonde = os.path.splitext(sonde)[0] 
             try:
                 valeur = float(parts[1].strip())  
+                print(f"Valeur récupérée : Sonde = {sonde}, Valeur = {valeur}")  # Debugging
                 return sonde, valeur
             except ValueError:
                 print(f"Erreur : Impossible de convertir '{parts[1].strip()}' en nombre.")
@@ -41,13 +42,13 @@ def run_sonde(command):
         return None, None
 
 def envoyer_alerte(sujet, message):
-    print(f"Envoi d'alerte : Sujet = {sujet}, Message = {message}")
+    print(f"Envoi d'alerte : Sujet = {sujet}, Message = {message}")  # Debugging
     sender_email = "nathan.bartier@alumni.univ-avignon.fr"  # Doit être identique à username
     receiver_email = "nathan.bartier@alumni.univ-avignon.fr"  # Teste avec une adresse universitaire
     smtp_server = "partage.univ-avignon.fr"
     smtp_port = 465
     username = "nathan.bartier@alumni.univ-avignon.fr"  # Même adresse pour s'authentifier
-    password = os.getenv("SMTP_PASSWORD") #  Ne pas stocker en clair !
+    password = os.getenv("SMTP_PASSWORD")  # Ne pas stocker en clair !
 
     msg = MIMEMultipart()
     msg["From"] = sender_email
@@ -56,7 +57,7 @@ def envoyer_alerte(sujet, message):
     msg.attach(MIMEText(message, "plain"))
 
     try:
-        print("Tentative de connexion au serveur SMTP...")
+        print("Tentative de connexion au serveur SMTP...")  # Debugging
         server = smtplib.SMTP_SSL(smtp_server, smtp_port)
         server.login(username, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
@@ -64,6 +65,7 @@ def envoyer_alerte(sujet, message):
         print("Alerte envoyée avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
+
 
 sondes = [
     os.path.join(SONDES_DIR, f) for f in os.listdir(SONDES_DIR)

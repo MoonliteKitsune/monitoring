@@ -87,14 +87,15 @@ CREATE TABLE IF NOT EXISTS monitoring (
 for cmd in sondes:
     sonde, valeur = run_sonde(cmd)
     if sonde and valeur is not None:
+        print(sonde," ",valeur)
         try:
             cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
             conn.commit()
             print(f" Données de '{sonde}' enregistrées avec succès : {valeur}")
             
-            if sonde.lower() == "sondedisk" and valeur >= 10:
+            if sonde == "sondedisk" and valeur >= 10:
                 envoyer_alerte("Alerte Disque Plein", f"Le disque dur est plein à {valeur}%. Veuillez libérer de l'espace.")
-            elif sonde.lower() == "sonderam" and valeur >= 1:
+            elif sonde == "sonderam" and valeur >= 1:
                 envoyer_alerte("Alerte RAM Saturée", f"La RAM est utilisée à {valeur}%. Veuillez vérifier les processus en cours.")
             
         except Exception as e:

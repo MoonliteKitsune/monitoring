@@ -6,8 +6,8 @@ import os
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
 cursor = conn.cursor()
 
-# Créer le répertoire /mnt/graph s'il n'existe pas
-output_dir = "/mnt/graph"
+# Définir le répertoire 'static' pour stocker le fichier HTML
+output_dir = os.path.join(os.path.dirname(__file__), 'static')
 os.makedirs(output_dir, exist_ok=True)
 
 # Créer un fichier HTML pour inclure les graphiques
@@ -40,7 +40,7 @@ with open(html_output, 'w') as f:
         # Ajouter les données au graphique
         line_chart.add(sonde, valeurs)
         
-        # Enregistrer le graphique dans un fichier SVG
+        # Enregistrer le graphique dans un fichier SVG dans le répertoire 'static'
         output_file = os.path.join(output_dir, f"{sonde}_graph.svg")
         line_chart.render_to_file(output_file)
         print(f"Graphique pour {sonde} enregistré sous {output_file}")

@@ -40,14 +40,14 @@ with open(html_output, 'w') as f:
         # Ajouter les données au graphique
         line_chart.add(sonde, valeurs)
         
-        # Enregistrer le graphique dans un fichier SVG dans le dossier static/
+        # Enregistrer le graphique dans un fichier SVG directement dans le dossier static/
         output_file = os.path.join(static_output_dir, f"{sonde}_graph.svg")
         line_chart.render_to_file(output_file)
         print(f"Graphique pour {sonde} enregistré sous {output_file}")
 
         # Ajouter le graphique SVG au fichier HTML
         f.write(f"<h2>Graphique de la sonde {sonde}</h2>\n")
-        f.write(f'<object data="{os.path.basename(output_file)}" type="image/svg+xml" width="600" height="400"></object>\n')
+        f.write(f'<object data="/static/{os.path.basename(output_file)}" type="image/svg+xml" width="600" height="400"></object>\n')
 
     # Ajouter la fin du fichier HTML
     f.write("</body></html>\n")

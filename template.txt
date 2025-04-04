@@ -1,0 +1,13 @@
+Objet : {sujet}
+
+Bonjour,
+
+Une alerte a été déclenchée pour la sonde {sonde}. Voici les détails :
+
+Seuil : {seuil}%
+Valeur actuelle : {valeur}%
+
+Veuillez prendre les mesures nécessaires pour résoudre le problème.
+
+Cordialement,
+Votre système de monitoring

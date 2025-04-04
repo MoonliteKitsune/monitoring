@@ -87,7 +87,6 @@ CREATE TABLE IF NOT EXISTS monitoring (
 for cmd in sondes:
     sonde, valeur = run_sonde(cmd)
     if sonde and valeur is not None:
-        print(sonde," ",valeur)
         try:
             cursor.execute("INSERT INTO monitoring (sonde, valeur) VALUES (?, ?)", (sonde, valeur))
             conn.commit()

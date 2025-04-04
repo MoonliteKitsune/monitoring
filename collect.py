@@ -5,6 +5,7 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from string import Template
 
 # Chemin absolu du répertoire contenant le script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -40,8 +41,6 @@ def run_sonde(command):
         print(f"Erreur avec la commande {command}: {e}")
         return None, None
 
-from string import Template
-import os
 
 def envoyer_alerte(sujet, sonde, valeur, seuil):
     # Charger le template depuis un fichier

@@ -40,13 +40,22 @@ def run_sonde(command):
         print(f"Erreur avec la commande {command}: {e}")
         return None, None
 
-def envoyer_alerte(sujet, message):
-    sender_email = "nathan.bartier@alumni.univ-avignon.fr"  # Doit être identique à username
-    receiver_email = "nathan.bartier@alumni.univ-avignon.fr"  # Teste avec une adresse universitaire
+from string import Template
+import os
+
+def envoyer_alerte(sujet, sonde, valeur, seuil):
+    with open("email_template.txt", "r") as f:
+        template_content = f.read()
+
+    template = Template(template_content)
+    message = template.substitute(sujet=sujet, sonde=sonde, seuil=seuil, valeur=valeur)
+
+    sender_email = "nathan.bartier@alumni.univ-avignon.fr"
+    receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
     smtp_server = "partage.univ-avignon.fr"
     smtp_port = 465
-    username = "nathan.bartier@alumni.univ-avignon.fr"  # Même adresse pour s'authentifier
-    password = os.getenv("SMTP_PASSWORD")  # Ne pas stocker en clair !
+    username = "nathan.bartier@alumni.univ-avignon.fr"
+    password = os.getenv("SMTP_PASSWORD")
 
     msg = MIMEMultipart()
     msg["From"] = sender_email
@@ -62,6 +71,7 @@ def envoyer_alerte(sujet, message):
         print("Alerte envoyée avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'alerte : {e}")
+
 
 
 sondes = [
@@ -90,9 +100,13 @@ for cmd in sondes:
             print(f" Données de '{sonde}' enregistrées avec succès : {valeur}")
             
             if sonde == "Utilisation_du_disque" and valeur >= 10:
-                envoyer_alerte("Alerte Disque Plein", f"Le disque dur est plein à {valeur}%. Veuillez libérer de l'espace.")
+                # Définir un seuil pour l'alerte de disque
+                seuil = 10
+                envoyer_alerte("Alerte Disque Plein", sonde, valeur, seuil)
             elif sonde == "Pourcentage_de_ram" and valeur >= 1:
-                envoyer_alerte("Alerte RAM Saturée", f"La RAM est utilisée à {valeur}%. Veuillez vérifier les processus en cours.")
+                # Définir un seuil pour l'alerte de RAM
+                seuil = 1
+                envoyer_alerte("Alerte RAM Saturée", sonde, valeur, seuil)
             
         except Exception as e:
             print(f" Erreur lors de l'insertion dans la base de données : {e}")

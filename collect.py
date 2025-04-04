@@ -44,19 +44,24 @@ from string import Template
 import os
 
 def envoyer_alerte(sujet, sonde, valeur, seuil):
-    with open("template.txt", "r") as f:
+    # Charger le template depuis un fichier
+    template_path = "template.txt"
+    with open(template_path, "r") as f:
         template_content = f.read()
 
+    # Créer un objet Template et remplacer les variables
     template = Template(template_content)
     message = template.substitute(sujet=sujet, sonde=sonde, seuil=seuil, valeur=valeur)
 
+    # Informations sur l'email
     sender_email = "nathan.bartier@alumni.univ-avignon.fr"
     receiver_email = "nathan.bartier@alumni.univ-avignon.fr"
     smtp_server = "partage.univ-avignon.fr"
     smtp_port = 465
     username = "nathan.bartier@alumni.univ-avignon.fr"
-    password = os.getenv("SMTP_PASSWORD")
+    password = os.getenv("SMTP_PASSWORD")  # Utiliser une variable d'environnement pour la sécurité
 
+    # Préparer le message
     msg = MIMEMultipart()
     msg["From"] = sender_email
     msg["To"] = receiver_email
@@ -64,6 +69,7 @@ def envoyer_alerte(sujet, sonde, valeur, seuil):
     msg.attach(MIMEText(message, "plain"))
 
     try:
+        # Connexion au serveur SMTP et envoi du message
         server = smtplib.SMTP_SSL(smtp_server, smtp_port)
         server.login(username, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())

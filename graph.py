@@ -49,6 +49,20 @@ with open(html_output, 'w') as f:
         f.write(f"<h2>Graphique de la sonde {sonde}</h2>\n")
         f.write(f'<object data="/static/{os.path.basename(output_file)}" type="image/svg+xml" width="600" height="400"></object>\n')
 
+    # Récupérer la dernière alerte depuis la base de données
+    cursor.execute("SELECT * FROM alerte ORDER BY id DESC LIMIT 1")
+    alerte = cursor.fetchone()
+
+    if alerte:
+        # Ajouter un tableau HTML pour afficher la dernière alerte
+        f.write("<h2>Dernière Alerte</h2>\n")
+        f.write("<table border='1'>\n")
+        f.write("<tr><th>Date</th><th>Référence</th><th>Titre</th><th>Status</th></tr>\n")
+        f.write(f"<tr><td>{alerte[1]}</td><td>{alerte[2]}</td><td>{alerte[3]}</td><td>{alerte[4]}</td></tr>\n")
+        f.write("</table>\n")
+    else:
+        f.write("<p>Aucune alerte trouvée.</p>\n")
+
     # Ajouter la fin du fichier HTML
     f.write("</body></html>\n")
 

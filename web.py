@@ -1,11 +1,13 @@
-from flask import Flask, send_file
+from flask import Flask, send_from_directory
+import os
 
 app = Flask(__name__)
 
 @app.route('/')
-def ouvrir_fichier_html():
-    # Renvoie le fichier 'resultat.html' situé dans le même dossier que web.py
-    return send_file('graphiques_sondes.html')
+def afficher_graphiques():
+    # Renvoie le fichier HTML généré dans 'static/'
+    return send_from_directory('static', 'graphiques_sondes.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    # Active le mode débogage pour avoir plus de détails sur les erreurs
+    app.run(host='0.0.0.0', port=8080, debug=True)

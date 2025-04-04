@@ -29,7 +29,6 @@ def run_sonde(command):
             sonde = os.path.splitext(sonde)[0] 
             try:
                 valeur = float(parts[1].strip())  
-                print(f"Valeur récupérée : Sonde = {sonde}, Valeur = {valeur}")  # Debugging
                 return sonde, valeur
             except ValueError:
                 print(f"Erreur : Impossible de convertir '{parts[1].strip()}' en nombre.")

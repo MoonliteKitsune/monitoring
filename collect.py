@@ -44,7 +44,7 @@ from string import Template
 import os
 
 def envoyer_alerte(sujet, sonde, valeur, seuil):
-    with open("email_template.txt", "r") as f:
+    with open("template.txt", "r") as f:
         template_content = f.read()
 
     template = Template(template_content)

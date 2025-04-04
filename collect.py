@@ -93,9 +93,9 @@ for cmd in sondes:
             conn.commit()
             print(f" Données de '{sonde}' enregistrées avec succès : {valeur}")
             
-            if sonde == "sondedisk" and valeur >= 10:
+            if sonde == "Utilisation_du_disque" and valeur >= 10:
                 envoyer_alerte("Alerte Disque Plein", f"Le disque dur est plein à {valeur}%. Veuillez libérer de l'espace.")
-            elif sonde == "sonderam" and valeur >= 1:
+            elif sonde == "Pourcentage_de_ram" and valeur >= 1:
                 envoyer_alerte("Alerte RAM Saturée", f"La RAM est utilisée à {valeur}%. Veuillez vérifier les processus en cours.")
             
         except Exception as e:

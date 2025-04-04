@@ -6,8 +6,8 @@ import os
 conn = sqlite3.connect("/home/elprimooooo/ams/monitoring/monitoring.db")
 cursor = conn.cursor()
 
-# Créer le répertoire static/graph s'il n'existe pas
-static_output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'graph')
+# Créer le répertoire static s'il n'existe pas
+static_output_dir = os.path.dirname(os.path.abspath(__file__)) + '/static'
 os.makedirs(static_output_dir, exist_ok=True)
 
 # Créer un fichier HTML pour inclure les graphiques
@@ -21,7 +21,7 @@ with open(html_output, 'w') as f:
     cursor.execute("SELECT DISTINCT sonde FROM monitoring")
     sondes = cursor.fetchall()
 
-    # Créer un graphique pour chaque sonde et l'enregistrer dans un fichier SVG dans static/
+    # Créer un graphique pour chaque sonde et l'enregistrer dans un fichier SVG directement dans static/
     for sonde_tuple in sondes:
         sonde = sonde_tuple[0]  # Extraire le nom de la sonde de la tuple
         
@@ -47,7 +47,7 @@ with open(html_output, 'w') as f:
 
         # Ajouter le graphique SVG au fichier HTML
         f.write(f"<h2>Graphique de la sonde {sonde}</h2>\n")
-        f.write(f'<object data="graph/{os.path.basename(output_file)}" type="image/svg+xml" width="600" height="400"></object>\n')
+        f.write(f'<object data="{os.path.basename(output_file)}" type="image/svg+xml" width="600" height="400"></object>\n')
 
     # Ajouter la fin du fichier HTML
     f.write("</body></html>\n")

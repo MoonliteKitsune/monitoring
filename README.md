@@ -89,6 +89,4 @@ Accès aux graphiques via : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 - Tous les fichiers doivent être à leur bonne place (notamment `graphique_sonde.html` dans `ams/static/`).
 - Vérifier le fichier `cronlog.log` en cas de souci.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Made with ❤️](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red)](#)
 

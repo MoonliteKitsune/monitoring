@@ -10,4 +10,4 @@ def afficher_graphiques():
 
 if __name__ == '__main__':
     # Active le mode débogage pour avoir plus de détails sur les erreurs
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

@@ -1,6 +1,6 @@
-#Monitoring Sondes - Setup & Utilisation
+# Monitoring Sondes - Setup & Utilisation
 
-📁 Permissions
+## 📁 Permissions
 
     Donner les droits nécessaires au dossier sondes/ pour permettre aux sondes de fonctionner :
     chmod -R 755 sondes/
